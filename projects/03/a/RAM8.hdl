@@ -15,5 +15,39 @@ CHIP RAM8 {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+    /**
+    * 8-way demultiplexor.  
+    * {a,b,c,d,e,f,g,h} = {in,0,0,0,0,0,0,0} if sel == 000
+    *                     {0,in,0,0,0,0,0,0} if sel == 001
+    *                     etc.
+    *                     {0,0,0,0,0,0,0,in} if sel == 111
+    */
+    //loadを入力として、どのアドレスのレジスタに対する処理か決定
+    DMux8Way(in=load, sel=address, a=loadA, b=loadB, c=loadC, d=loadD, e=loadE, f=loadF, g=loadG, h=loadH);
+
+    /**
+    * 16-bit register:
+    * If load[t] == 1 then out[t+1] = in[t]
+    * else out does not change
+    */
+    //対象のレジスタがわかったら処理を行う。loadが0なら何もしない、loadが1なら入力値に書き換える
+    //対象以外のloadXは0なので、何もせず、一つ前の出力をそのまま引き継ぐ
+    Register(in=in, load=loadA, out=o1);
+    Register(in=in, load=loadB, out=o2);
+    Register(in=in, load=loadC, out=o3);
+    Register(in=in, load=loadD, out=o4);
+    Register(in=in, load=loadE, out=o5);
+    Register(in=in, load=loadF, out=o6);
+    Register(in=in, load=loadG, out=o7);
+    Register(in=in, load=loadH, out=o8);
+
+    /**
+    * 8-way 16-bit multiplexor.  
+    * out = a if sel == 000
+    *       b if sel == 001
+    *       etc.
+    *       h if sel == 111
+    */
+    //対象のレジスタについて、処理後の値を出力する
+    Mux8Way16(a=o1, b=o2, c=o3, d=o4, e=o5, f=o6, g=o7, h=o8, sel=address, out=out);
 }
