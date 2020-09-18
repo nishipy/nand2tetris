@@ -15,4 +15,6 @@ CHIP Bit {
 
     PARTS:
     // Put your code here:
+    Mux(a=pre-out, b=in, sel=load, out=o1);
+    DFF(in=o1, out=pre-out, out=out); //ひとつ前のタイムユニットの入力値を保持
 }
