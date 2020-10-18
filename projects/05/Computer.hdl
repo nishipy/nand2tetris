@@ -20,4 +20,13 @@ CHIP Computer {
 
     PARTS:
     // Put your code here:
+    // reference: https://github.com/havivha/Nand2Tetris/blob/master/05/Computer.hdl
+
+    //命令の読み込み
+    ROM32K(address=pc, out=instruction);
+    //CPUの処理
+    CPU(inM=memOut, instruction=instruction, reset=reset, outM=outM, 
+        writeM=writeM, addressM=addressM, pc=pc);
+    //メモリの処理
+    Memory(in=outM, load=writeM, address=addressM, out=memOut);
 }
